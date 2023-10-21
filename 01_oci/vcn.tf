@@ -22,13 +22,15 @@ resource "oci_core_internet_gateway" "internet-gateway" {
 }
 
 # Default route table
-resource "oci_core_default_route_table" "default-route-table" {
-  manage_default_resource_id = oci_core_vcn.vcn.default_route_table_id
-  route_rules {
-    destination       = "0.0.0.0/0"
-    network_entity_id = oci_core_internet_gateway.internet-gateway.id
+resource "oci_core_default_dhcp_options" "default-dhcp-options" {
+  manage_default_resource_id = oci_core_vcn.vcn.default_dhcp_options_id
+
+  options {
+    type        = "DomainNameServer"
+    server_type = "VcnLocalPlusInternet"
   }
 }
+
 
 # Default security list
 resource "oci_core_default_security_list" "default-security-list" {
